@@ -19,9 +19,10 @@ public:
     Node<T>* getRoot();
     
     void insert(T e);
-    bool search(T e);
-    void remove(T e);
+    Node<T>* search(T e);
+    void remove(T key);
     void remove(Node<T> *node);
+	T findPredecessor(Node<T>* node);
     
     void splitNode(T e, Node<T> *node, Node<T> *pCLKey = 0, Node<T> *pCRKey = 0);
     
@@ -49,32 +50,44 @@ BinaryTree23<T>::BinaryTree23(Node<T> *r){
 
 template <class T>
 BinaryTree23<T>::~BinaryTree23(){
-    
-    remove(root);
-    root = nullptr;
-    
+
 }
 
 template <class T>
-void BinaryTree23<T>::remove(T e){
-    
-    Node<T>* node = new Node<T>(e);
-    BinaryTree23<T>::remove(node);
+void BinaryTree23<T>::remove(T key){
+    Node<T>* node = search(key);
+	if (!node)
+		return;
+	T predecessor = findPredecessor(node);
+
+	std::cout << predecessor << std::endl;
+	
+	if (node->getInfoA() == key) {
+		node->setInfoA(predecessor);
+	}
+	else {
+		node->setInfoB(predecessor);
+	}
+
+	
 }
 
 template <class T>
-void BinaryTree23<T>::remove(Node<T> *node){
-    
-    if (node == nullptr){
-        return;
-    }else{
-        
-        this->remove(node->getLeft());
-        this->remove(node->getCenter());
-        this->remove(node->getRight());
-    
-        
-    }
+T BinaryTree23<T>::findPredecessor(Node<T>* node) {
+	Node<T>* p = node->getLeft();
+	while (p && p->getRight())
+		p = p->getRight();
+	if (p->getIsFull()) {
+		p->setIsFull(false);
+		return p->getInfoB();
+	}
+	else {
+		T info = p->getInfoA();
+		p->setIsEmpty(true);
+		//delete p;
+		//p->getParent()->setRight(nullptr);
+		return info;
+	}
 }
 
 template <class T>
@@ -278,7 +291,7 @@ void BinaryTree23<T>::splitNode(T e, Node<T> *node, Node<T> *pCLKey, Node<T> *pC
 }
 
 template <class T>
-bool BinaryTree23<T>::search(T e){
+Node<T>* BinaryTree23<T>::search(T e){
     
     Node<T> *location = root;
     int nivel = 0;
@@ -287,7 +300,7 @@ bool BinaryTree23<T>::search(T e){
         if (location->getInfoA() == e || location->getInfoB() == e){
             std::cout << "nivel " << nivel << std::endl;
             std::cout << "altura " << nivel-1 << std::endl;
-            return true;
+            return location;
         }else{
             if (location->getIsFull()){
                 if (e < location->getInfoA()){
@@ -312,25 +325,27 @@ bool BinaryTree23<T>::search(T e){
             }
         }
     }
-    return false;
+    return nullptr;
     
 }
 
 template <class T>
-int BinaryTreeRB<T>::height(Node<T>* node) {
+int BinaryTree23<T>::height(Node<T>* node) {
 	if (!node)
 		return -1;
 	else
-		return std::max(height(node->getLeft()), height(node->getRight())) + 1;
+		return std::max(height(node->getLeft()), height(node->getCenter()), height(node->getRight())) + 1;
 }
 
-int BinaryTreeRB<T>::depth(Node<T>* node) {
+template <class T>
+int BinaryTree23<T>::depth(Node<T>* node) {
 	if (!node->getParent())
 		return 0;
 	return depth(node->getParent()) + 1;
 }
 
-int BinaryTreeRB<T>::level(Node<T>* node) {
+template <class T>
+int BinaryTree23<T>::level(Node<T>* node) {
 	return depth(node) + 1;
 }
 

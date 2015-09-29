@@ -10,6 +10,7 @@ class Node{
     
     T infoA;
     T infoB;
+	bool isEmpty = false;
     
     Node<T> *left;
     Node<T> *right;
@@ -46,7 +47,9 @@ public:
     
     void setIsFull(bool value);
     bool getIsFull();
-    
+
+	void setIsEmpty(bool value);
+    bool getIsEmpty();    
 };
 
 template <class T>
@@ -153,5 +156,14 @@ bool Node<T>::getIsFull(){
     return isFull;
 }
 
+template <class T>
+void Node<T>::setIsEmpty(bool value){
+    isFull = value;
+}
+
+template <class T>
+bool Node<T>::getIsEmpty(){
+    return isFull;
+}
 
 #endif

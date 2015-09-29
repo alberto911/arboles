@@ -24,8 +24,8 @@ int main(int argc, const char * argv[])
     
     std::cout << "\nBorrar" << std::endl;
     
-    T23->remove(13);
-    T23->remove(62);
+    //T23->remove(33);
+    //T23->remove(62);
     T23->inOrder();
     cout << endl;
     
