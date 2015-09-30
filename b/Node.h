@@ -1,3 +1,11 @@
+//
+//  Node.h
+//  BinaryTreeB
+//
+//  Created by Sebastián Galguera on 06/09/15.
+//  Copyright (c) 2015 Sebastián Galguera. All rights reserved.
+//
+
 #ifndef __BinaryTreeB_Node_
 #define __BinaryTreeB_Node_
 
@@ -6,11 +14,13 @@ using namespace std;
 
 template <class T, int V>
 class Node {
-    //Node<T> * parent = nullptr;
+    
 public:
     
     T infoArray[V-1];
     int count;
+	int id;
+	static int counter;
     
     Node<T, V> *link[V];
 	Node();
@@ -19,9 +29,6 @@ public:
     
 	bool isEmpty();
 	bool isFull();
-
-	//Node<T> * getParent() const { return parent; }
-    //void setParent(Node<T> * value) { parent = value; }
     
 };
 
@@ -29,6 +36,7 @@ template <class T, int V>
 Node<T,V>::Node(){
     
 	this->count = 0;
+	id = counter++;
     
     for(int i=0;i < V;i++){
         this->link[i] = nullptr;

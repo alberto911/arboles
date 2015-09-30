@@ -1,8 +1,18 @@
+//
+//  BinaryTreeB.h
+//  BinaryTreeB
+//
+//  Created by Sebastián Galguera on 06/09/15.
+//  Copyright (c) 2015 Sebastián Galguera. All rights reserved.
+//
+
 #ifndef __BinaryTreeB____
 #define __BinaryTreeB____
 
 #include "Node.h"
 #include <iostream>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -18,6 +28,7 @@ public:
 
     void check();
     void traverse(Node<T, V>* current);
+	void reverse(Node<T, V> * current);
 	void insert(const T &newInfo);
 	void insertR(Node<T, V>* current, const T &newInfo, T &central, Node<T, V>* &linkToRight, bool &result);
 	void insertInfo(Node<T, V>* current, const T &entry, Node<T, V> *linkToRight, int position);
@@ -39,14 +50,22 @@ public:
 	void mergeNode(Node<T, V> *current, int position );
 	
     bool searchInfo(Node<T, V> *current, const T &goTo, int &position );
-    bool found(T &infoNode);
-    bool search(Node<T, V>* current, T &goTo);
+    bool found(T infoNode);
+    bool search(Node<T, V>* current, const T &goTo);
     
     void inOrder();
 
     void printTree();
 	void print( Node<T, V> *current );
-    
+
+	int height(Node<T, V>* node);
+	int depth( Node<T, V>* current, const T &goTo, int d);
+	int depth( Node<T, V>* node);
+	int level( Node<T, V>* node);
+
+	void saveTree(Node<T, V>* current);
+	bool searchInDisk(int current, const T &goTo);
+	bool searchInfoInDisk(int current, const T &goTo, int &next);
 };
 
 template <class T, int V>
@@ -70,6 +89,20 @@ void BinaryTreeB<T, V>::traverse(Node<T, V> * current){
 	}
 }
 
+template <class T, int V>
+void BinaryTreeB<T, V>::reverse(Node<T, V> * current){
+    
+	if (current != nullptr ){
+		reverse(current->link[current->count]);
+        
+		for (int i = current->count - 1; i >= 0; i--){
+            
+            std::cout << current->infoArray[i] << " ";
+			reverse(current->link[i]);
+            
+		}
+	}
+}
 
 template <class T, int V>
 void BinaryTreeB<T, V>::insert(const T &newInfo){
@@ -399,24 +432,19 @@ bool BinaryTreeB<T,V>:: searchInfo( Node<T, V> *current, const T &goTo, int &pos
 }
 
 template <class T, int V>
-bool BinaryTreeB<T,V>::found( T &infoNode ){
+bool BinaryTreeB<T,V>::found( T infoNode ){
     
     return search(root , infoNode);
     
 }
 
-template <class T, int V> bool BinaryTreeB<T,V>::search( Node<T, V> *current, T &goTo ){
-    
+template <class T, int V> bool BinaryTreeB<T,V>::search( Node<T, V>* current, const T &goTo ){
     bool result = false;
     int position;
     if (current != nullptr){
         
         result =  searchInfo(current, goTo, position);
-        if (result == true){
-            
-            goTo = current->infoArray[position]->getData();
-        }else{
-            
+        if (!result){
             result = search(current->link[position], goTo);
         }
     }
@@ -454,6 +482,109 @@ void BinaryTreeB<T,V>::print( Node<T, V> *current ){
     }
 }
 
+template <class T, int V>
+int BinaryTreeB<T,V>::height(Node<T, V>* node) {
+	if (!node)
+		return -1;
+	else {
+		int max = -1;
+		for (int i = 0; i <= node->count; i++){
+			int h = height(node->link[i]);
+			if (h > max)
+				max = h;
+		}
+		return max + 1;
+	}
+}
 
+template <class T, int V>
+int BinaryTreeB<T,V>::depth( Node<T, V>* current, const T &goTo, int d){   
+	bool result = false;
+    int position;
+    if (current != nullptr){
+        
+        result =  searchInfo(current, goTo, position);
+        if (!result){
+            return depth(current->link[position], goTo, d+1);
+        }
+    }
+    return d;
+}
+
+template <class T, int V>
+int BinaryTreeB<T,V>::depth( Node<T, V>* node) {
+	return depth(root, node->infoArray[0], 0);
+}
+
+template <class T, int V>
+int BinaryTreeB<T,V>::level( Node<T, V>* node) {
+	return depth(root, node->infoArray[0], 0) + 1;
+}
+
+template <class T, int V>
+void BinaryTreeB<T,V>::saveTree(Node<T, V>* current) {	
+	if (current != nullptr ){
+		string path = "data/";
+		path.append(to_string(current->id));
+		path.append(".txt");
+		ofstream file(path);
+
+		if (current->link[0])
+			file << current->link[0]->id << endl;
+		else
+			file << "-1" << endl;
+		saveTree(current->link[0]);
+
+  		if (file.is_open()) {
+			for (int i = 0; i < current->count; i++) {
+		        file << current->infoArray[i] << endl;
+				if (current->link[i + 1])
+					file << current->link[i + 1]->id << endl;
+				else
+					file << "-1" << endl;
+				saveTree(current->link[i + 1]);
+			}
+			file.close();
+		}
+	}
+}
+
+template <class T, int V> bool BinaryTreeB<T,V>::searchInDisk(int current, const T &goTo){
+    bool result = false;
+    int next;
+
+    if (current != -1){
+        result =  searchInfoInDisk(current, goTo, next);
+        if (!result){
+            result = searchInDisk(next, goTo);
+        }
+    }
+    return result;
+}
+
+template <class T, int V>
+bool BinaryTreeB<T,V>:: searchInfoInDisk(int current, const T &goTo, int &next ){
+	bool result;    
+	
+	string path = "data/";
+	path.append(to_string(current));
+	path.append(".txt");
+	ifstream file(path);
+    
+	if (file.is_open()) {
+		std::string link, info;
+		std::getline(file, link);
+		while (std::getline(file, info) && goTo > stoi(info))
+			getline(file, link);
+		next = stoi(link);
+		
+		file.close();
+
+		if (!file.eof() && goTo == stoi(info))
+			return true;
+		else
+			return false;
+	}
+}
 
 #endif

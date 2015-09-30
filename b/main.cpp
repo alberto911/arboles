@@ -1,7 +1,19 @@
+//
+//  main.cpp
+//  BinaryTreeB
+//
+//  Created by Sebastián Galguera on 06/09/15.
+//  Copyright (c) 2015 Sebastián Galguera. All rights reserved.
+//
+
+
 
 #include <iostream>
 #include <fstream>
 #include "BinaryTreeB.h"
+
+template <class T, int V>
+int Node<T, V>::counter = 0;
 
 int main(int argc,   char * argv[])
 {
@@ -32,15 +44,22 @@ int main(int argc,   char * argv[])
     BT->remove(34);
     
     BT->inOrder();
+	std::cout << std::endl;
+	BT->reverse(BT->root);
     
     std::cout << "\n\nBuscar" << std::endl;
    
-	int buscar = 2243;
-    if (BT->search(BT->root, buscar)){
+    if (BT->found(3)){
         std::cout << "Se encontró el elemento" << std::endl;
     }else{
         std::cout << "No se encontró el elemento" << std::endl;
     }
-    
+
+	BT->saveTree(BT->root);
+	if (BT->searchInDisk(BT->root->id, 2243))
+		std::cout << "Se encontró el elemento" << std::endl;
+	else
+		std::cout << "No se encontró el elemento" << std::endl;
+
     return 0;
 }
