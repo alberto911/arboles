@@ -21,11 +21,11 @@ int main(int argc, const char * argv[])
     
     T23->postOrder();
     std::cout << std::endl;
-    
+
     std::cout << "\nBorrar" << std::endl;
     
-    //T23->remove(33);
-    //T23->remove(62);
+    T23->remove(33);
+    T23->remove(62);
     T23->inOrder();
     cout << endl;
     
