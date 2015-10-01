@@ -366,12 +366,14 @@ int BinaryTreeRB<T>::height(Node<T>* node) {
 		return std::max(height(node->getLeft()), height(node->getRight())) + 1;
 }
 
+template <class T>
 int BinaryTreeRB<T>::depth(Node<T>* node) {
 	if (!node->getParent())
 		return 0;
 	return depth(node->getParent()) + 1;
 }
 
+template <class T>
 int BinaryTreeRB<T>::level(Node<T>* node) {
 	return depth(node) + 1;
 }

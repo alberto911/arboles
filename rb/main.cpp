@@ -3,7 +3,7 @@
 
 int main(int argc, const char * argv[])
 {
-    std::cout << "Bienvenido al arbol 23 TX-2932" << std::endl;
+    std::cout << "Bienvenido al arbol RB TX-2932" << std::endl;
     std::cout << "A continuacion se haran los procesos" << std::endl;
     std::cout << "\nInsertar e imprimir" << std::endl;
 

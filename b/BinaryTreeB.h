@@ -66,6 +66,8 @@ public:
 	void saveTree(Node<T, V>* current);
 	bool searchInDisk(int current, const T &goTo);
 	bool searchInfoInDisk(int current, const T &goTo, int &next);
+	void saveTree();
+	bool searchInDisk(const T &goTo);
 };
 
 template <class T, int V>
@@ -549,7 +551,18 @@ void BinaryTreeB<T,V>::saveTree(Node<T, V>* current) {
 	}
 }
 
-template <class T, int V> bool BinaryTreeB<T,V>::searchInDisk(int current, const T &goTo){
+template <class T, int V>
+void BinaryTreeB<T,V>::saveTree() {	
+	saveTree(root);
+}
+
+template <class T, int V>
+bool BinaryTreeB<T,V>::searchInDisk(const T &goTo){
+    return searchInDisk(root->id, goTo);
+}
+
+template <class T, int V>
+bool BinaryTreeB<T,V>::searchInDisk(int current, const T &goTo){
     bool result = false;
     int next;
 

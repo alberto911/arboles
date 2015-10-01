@@ -55,8 +55,10 @@ int main(int argc,   char * argv[])
         std::cout << "No se encontró el elemento" << std::endl;
     }
 
-	BT->saveTree(BT->root);
-	if (BT->searchInDisk(BT->root->id, 2243))
+	std::cout << "\nGuardar y buscar en disco" << std::endl;
+
+	BT->saveTree();
+	if (BT->searchInDisk(2243))
 		std::cout << "Se encontró el elemento" << std::endl;
 	else
 		std::cout << "No se encontró el elemento" << std::endl;
